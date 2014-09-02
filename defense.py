@@ -69,6 +69,55 @@ class SimpleCondition(AbstractCondition):
         return self.backend
 
 
+class AndCondition(SimpleCondition):
+    """
+    And condition
+    """
+    def __init__(self):
+        self.conditions = []
+
+    def get_backend(self):
+        return None
+
+    def increase_value(self):
+
+        for condition in self.conditions:
+            condition.increase_value()
+
+    def decrease_value(self):
+        for condition in self.conditions:
+            condition.decrease_value()
+
+    def push(self, condition):
+        self.conditions.append(condition)
+
+    def reach(self):
+        for condition in self.conditions:
+
+            if not condition.reach():
+                return False
+        return True
+
+    def destroy(self):
+        for condition in self.conditions:
+            condition.destroy()
+
+
+class OrCondition(AndCondition):
+    """
+    Or condition
+    """
+    def __init__(self):
+        self.conditions = []
+
+    def reach(self):
+        for condition in self.conditions:
+            if condition.reach():
+                return True
+
+        return False
+
+
 class AbstractAction(object):
     """
     do something when reach the condition
